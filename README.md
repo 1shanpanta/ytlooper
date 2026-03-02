@@ -53,7 +53,7 @@ Loop your favorite YouTube moments endlessly.
 
 ## Screenshots
 
-*Screenshots coming soon...*
+![YouTube Looper](screenshots/youtube-looper.png)
 
 ---
 
