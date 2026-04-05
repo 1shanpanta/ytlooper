@@ -207,7 +207,9 @@ function App() {
 
       <div className="w-full max-w-6xl">
         <header>
-          <Header />
+          <nav aria-label="Site">
+            <Header />
+          </nav>
         </header>
         <MobileWarning />
 
