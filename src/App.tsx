@@ -200,17 +200,19 @@ function App() {
     <div
       className="relative h-screen overflow-y-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:flex lg:items-center lg:justify-center bg-[#0a0a0b] text-white antialiased selection:bg-cyan-500/30 selection:text-cyan-100"
       style={{
-        fontFamily: 'Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, Apple Color Emoji, Segoe UI Emoji',
+        fontFamily: '"Inter", "Inter Fallback", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji"',
       }}
     >
       <Background />
 
-      <main className="w-full max-w-6xl">
-        <Header />
+      <div className="w-full max-w-6xl">
+        <header>
+          <Header />
+        </header>
         <MobileWarning />
 
         {/* Content */}
-        <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-6">
+        <main className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-6">
           {/* Controls Card */}
           <section className="rounded-2xl bg-white/5 backdrop-blur-2xl backdrop-saturate-150 ring-1 ring-white/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_10px_40px_rgba(0,0,0,0.45)]">
             <div className="p-5 sm:p-6 md:p-7">
@@ -261,7 +263,7 @@ function App() {
                   <div className="flex items-center gap-2">
                     <ShareButton />
                     <button
-                      className="group inline-flex items-center justify-center rounded-xl p-2 bg-amber-400/10 text-amber-200 ring-1 ring-amber-300/20 hover:bg-amber-400/15 hover:ring-amber-300/30 transition shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_10px_30px_rgba(0,0,0,0.35)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
+                      className="group inline-flex items-center justify-center rounded-xl p-3 min-h-[48px] min-w-[48px] bg-amber-400/10 text-amber-200 ring-1 ring-amber-300/20 hover:bg-amber-400/15 hover:ring-amber-300/30 transition shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_10px_30px_rgba(0,0,0,0.35)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
                       title="⚠️ Use headphones to avoid audio feedback if testing multiple players."
                     >
                       <AlertTriangle className="h-4 w-4 text-amber-200 group-hover:text-amber-100" />
@@ -286,8 +288,12 @@ function App() {
             onReady={handleVideoReady}
             onError={handleVideoError}
           />
-        </div>
-      </main>
+        </main>
+
+        <footer className="mt-4 text-center text-xs text-white/40">
+          <p>YouTube Looper — Loop any section of a YouTube video.</p>
+        </footer>
+      </div>
     </div>
   );
 }

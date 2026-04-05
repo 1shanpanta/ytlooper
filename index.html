@@ -2,12 +2,68 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>YouTube Clipper - Video Loop Tool</title>
+    <title>YouTube Looper - Loop Any Section of a Video</title>
+    <meta name="description" content="Loop any section of a YouTube video endlessly. Paste a link, set start and end times, adjust playback speed, and share your clips with anyone.">
+    <meta name="robots" content="index,follow">
+
+    <!-- Favicon & PWA -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#0a0a0b" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://looper-wheat.vercel.app/" />
+    <meta property="og:title" content="YouTube Looper - Loop Any Section of a Video" />
+    <meta property="og:description" content="Loop any section of a YouTube video endlessly. Paste a link, set start and end times, adjust playback speed, and share your clips with anyone." />
+    <meta property="og:image" content="https://looper-wheat.vercel.app/og-image.png" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="YouTube Looper - Loop Any Section of a Video" />
+    <meta name="twitter:description" content="Loop any section of a YouTube video endlessly. Paste a link, set start and end times, adjust playback speed, and share your clips with anyone." />
+    <meta name="twitter:image" content="https://looper-wheat.vercel.app/og-image.png" />
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "YouTube Looper",
+      "url": "https://looper-wheat.vercel.app/",
+      "description": "Loop any section of a YouTube video endlessly. Paste a link, set start and end times, adjust playback speed, and share your clips with anyone.",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
+
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.youtube.com https://s.ytimg.com https://www.googletagmanager.com; frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https: http:; connect-src 'self' https://www.youtube.com https://s.ytimg.com; media-src 'self' https: http:;">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Fonts: preconnect + non-render-blocking load -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" /></noscript>
+
     <style>
+      /* Font fallback to reduce CLS during font swap */
+      @font-face {
+        font-family: 'Inter Fallback';
+        src: local('Arial');
+        ascent-override: 90%;
+        descent-override: 22%;
+        line-gap-override: 0%;
+        size-adjust: 107%;
+      }
+
       /* Fix viewport and scrollbar issues */
       html, body {
         height: 100%;

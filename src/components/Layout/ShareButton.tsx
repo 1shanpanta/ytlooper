@@ -70,7 +70,7 @@ export const ShareButton: React.FC<ShareButtonProps> = ({ className = "" }) => {
         disabled={!canShare}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        className={`group inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-medium ring-1 transition shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_10px_30px_rgba(0,0,0,0.35)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30 disabled:opacity-50 disabled:cursor-not-allowed ${
+        className={`group inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2 min-h-[48px] text-sm font-medium ring-1 transition shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_10px_30px_rgba(0,0,0,0.35)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30 disabled:opacity-50 disabled:cursor-not-allowed ${
           copied
             ? 'bg-green-400/20 text-green-200 ring-green-300/30'
             : 'bg-white/5 text-white/90 ring-white/10 hover:bg-white/7 hover:ring-white/20'

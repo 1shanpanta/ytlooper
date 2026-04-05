@@ -18,12 +18,13 @@ export const UrlInput: React.FC<UrlInputProps> = ({
 
   return (
     <div className={`space-y-2 ${className}`}>
-      <label className="text-sm font-medium text-white/70 flex items-center gap-2 mb-1">
+      <label htmlFor="youtube-url" className="text-sm font-medium text-white/70 flex items-center gap-2 mb-1">
         <Link2 className="h-4 w-4 text-white/60" />
         YouTube URL
       </label>
       <div className="w-full rounded-xl bg-white/5 ring-1 ring-white/10 shadow-[inset_0_2px_10px_rgba(255,255,255,0.05),0_10px_30px_rgba(0,0,0,0.35)] focus-within:ring-white/20 transition">
         <input
+          id="youtube-url"
           value={value}
           onChange={(e) => onChange(e.target.value)}
           onKeyDown={handleKeyDown}
