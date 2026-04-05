@@ -7,6 +7,15 @@
     <meta name="description" content="Loop any section of a YouTube video endlessly. Paste a link, set start and end times, adjust playback speed, and share your clips with anyone.">
     <meta name="robots" content="index,follow">
 
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-L59SC5VW14"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-L59SC5VW14');
+    </script>
+
     <!-- Favicon & PWA -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/favicon.svg" />
@@ -15,16 +24,16 @@
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://looper-wheat.vercel.app/" />
+    <meta property="og:url" content="https://ytlooper.vercel.app/" />
     <meta property="og:title" content="YouTube Looper - Loop Any Section of a Video" />
     <meta property="og:description" content="Loop any section of a YouTube video endlessly. Paste a link, set start and end times, adjust playback speed, and share your clips with anyone." />
-    <meta property="og:image" content="https://looper-wheat.vercel.app/og-image.png" />
+    <meta property="og:image" content="https://ytlooper.vercel.app/og-image.png" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="YouTube Looper - Loop Any Section of a Video" />
     <meta name="twitter:description" content="Loop any section of a YouTube video endlessly. Paste a link, set start and end times, adjust playback speed, and share your clips with anyone." />
-    <meta name="twitter:image" content="https://looper-wheat.vercel.app/og-image.png" />
+    <meta name="twitter:image" content="https://ytlooper.vercel.app/og-image.png" />
 
     <!-- Structured Data -->
     <script type="application/ld+json">
@@ -32,7 +41,7 @@
       "@context": "https://schema.org",
       "@type": "WebApplication",
       "name": "YouTube Looper",
-      "url": "https://looper-wheat.vercel.app/",
+      "url": "https://ytlooper.vercel.app/",
       "description": "Loop any section of a YouTube video endlessly. Paste a link, set start and end times, adjust playback speed, and share your clips with anyone.",
       "applicationCategory": "MultimediaApplication",
       "operatingSystem": "Any",
@@ -44,7 +53,7 @@
     }
     </script>
 
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.youtube.com https://s.ytimg.com https://www.googletagmanager.com; frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https: http:; connect-src 'self' https://www.youtube.com https://s.ytimg.com; media-src 'self' https: http:;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.youtube.com https://s.ytimg.com https://www.googletagmanager.com; frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https: http:; connect-src 'self' https://www.youtube.com https://s.ytimg.com https://www.google-analytics.com https://analytics.google.com; media-src 'self' https: http:;">
 
     <!-- Fonts: preconnect + non-render-blocking load -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
