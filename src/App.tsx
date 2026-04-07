@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Repeat, AlertTriangle } from 'lucide-react';
+import { Repeat, AlertTriangle, Github } from 'lucide-react';
 import {
   Header,
   MobileWarning,
@@ -292,8 +292,17 @@ function App() {
           />
         </main>
 
-        <footer className="mt-4 text-center text-xs text-white/40">
+        <footer className="mt-4 text-center text-xs text-white/40 flex items-center justify-center gap-3">
           <p>YouTube Looper — Loop any section of a YouTube video.</p>
+          <a
+            href="https://github.com/1shanpanta"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-white/70 transition-colors"
+            title="GitHub"
+          >
+            <Github className="h-4 w-4" />
+          </a>
         </footer>
       </div>
     </div>
