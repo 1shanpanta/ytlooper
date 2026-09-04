@@ -198,7 +198,7 @@ function App() {
 
   return (
     <div
-      className="relative h-screen overflow-y-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:flex lg:items-center lg:justify-center bg-[#0a0a0b] text-white antialiased selection:bg-cyan-500/30 selection:text-cyan-100"
+      className="relative h-screen overflow-y-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-6 lg:flex lg:items-center lg:justify-center bg-[#0a0a0b] text-white antialiased selection:bg-cyan-500/30 selection:text-cyan-100"
       style={{
         fontFamily: '"Inter", "Inter Fallback", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji"',
       }}
