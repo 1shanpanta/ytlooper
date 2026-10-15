@@ -20,15 +20,24 @@ const controls = byId<HTMLDivElement>("controls");
 const status = byId<HTMLParagraphElement>("status");
 const toggle = byId<HTMLButtonElement>("toggle");
 const clearButton = byId<HTMLButtonElement>("clear");
+const range = byId<HTMLDivElement>("range");
+const rangeFill = byId<HTMLDivElement>("range-fill");
+
+const LOST_TAB = "Lost the tab. Reload the video and reopen this popup.";
 
 let tabId = 0;
 let videoId = "";
+let duration: number | null = null;
 let clip: Clip = EMPTY_CLIP;
 
 function isYouTube(url: string | undefined): boolean {
   if (!url) return false;
-  const { hostname } = new URL(url);
-  return hostname === "youtube.com" || hostname.endsWith(".youtube.com");
+  try {
+    const { hostname } = new URL(url);
+    return hostname === "youtube.com" || hostname.endsWith(".youtube.com");
+  } catch {
+    return false;
+  }
 }
 
 async function inPage(command: PageCommand): Promise<PlayerState> {
@@ -37,18 +46,40 @@ async function inPage(command: PageCommand): Promise<PlayerState> {
     func: runInPage,
     args: [command],
   });
-  return injection.result as PlayerState;
+  const state = injection.result as PlayerState;
+  if (state.duration !== null) duration = state.duration;
+  return state;
 }
 
 function showMessage(text: string) {
   message.textContent = text;
   message.hidden = false;
   controls.hidden = true;
+  toggle.hidden = true;
 }
 
 function setStatus(text: string, isError = false) {
   status.textContent = text;
   status.classList.toggle("error", isError);
+}
+
+const percent = (seconds: number, total: number) =>
+  Math.min(100, Math.max(0, (seconds / total) * 100));
+
+function renderRange() {
+  const { start, end } = clip;
+  const known = duration !== null && (start !== null || end !== null);
+  range.hidden = !known;
+  if (!known || duration === null) return;
+
+  const from = start ?? end ?? 0;
+  const to = end ?? start ?? 0;
+  const left = percent(Math.min(from, to), duration);
+  const right = percent(Math.max(from, to), duration);
+  rangeFill.style.left = `${left}%`;
+  rangeFill.style.width = `${right - left}%`;
+  range.classList.toggle("off", !clip.enabled);
+  range.classList.toggle("invalid", hasInvalidRange(clip));
 }
 
 function render() {
@@ -67,9 +98,9 @@ function render() {
 
   const invalid = hasInvalidRange(clip);
   if (invalid) inputs.end.setAttribute("aria-invalid", "true");
-  toggle.setAttribute("aria-pressed", String(clip.enabled));
-  toggle.textContent = clip.enabled ? "Loop on" : "Loop off";
+  toggle.setAttribute("aria-checked", String(clip.enabled));
   clearButton.disabled = clip.start === null && clip.end === null;
+  renderRange();
 
   if (invalid) setStatus("End must be after start.", true);
   else if (clip.start === null || clip.end === null) setStatus("Set a start and an end.");
@@ -83,14 +114,23 @@ async function commit(next: Clip) {
   try {
     await saveClip(videoId, clip);
     await inPage({ type: "loop", videoId, range: loopRange(clip) });
+    render();
   } catch {
-    setStatus("Lost the tab. Reload the video and reopen this popup.", true);
+    setStatus(LOST_TAB, true);
   }
 }
 
 async function markCurrent(field: Field) {
-  const { time } = await inPage({ type: "read" });
-  if (time !== null) await commit({ ...clip, [field]: roundTenth(time) });
+  try {
+    const { time } = await inPage({ type: "read" });
+    if (time === null) {
+      setStatus("Cannot read the time. Wait for an ad to end, then try again.", true);
+      return;
+    }
+    await commit({ ...clip, [field]: roundTenth(time) });
+  } catch {
+    setStatus(LOST_TAB, true);
+  }
 }
 
 function applyTypedValue(field: Field) {
@@ -144,7 +184,7 @@ async function init() {
     showMessage("This tab blocks extensions. Reload the video and try again.");
     return;
   }
-  if (!player.videoId || player.time === null) {
+  if (!player.videoId) {
     showMessage("No video found on this page.");
     return;
   }
@@ -155,4 +195,4 @@ async function init() {
   await commit(await loadClip(videoId));
 }
 
-void init();
+init().catch(() => showMessage("Something went wrong. Reload the video and reopen this popup."));
