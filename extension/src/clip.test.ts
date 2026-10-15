@@ -48,6 +48,17 @@ describe("loopRange", () => {
     expect(loopRange({ start: 20, end: 20, enabled: true })).toBeNull();
     expect(loopRange({ start: 20, end: 10, enabled: true })).toBeNull();
   });
+
+  it("returns null for a loop shorter than the minimum", () => {
+    expect(loopRange({ start: 30, end: 30.1, enabled: true })).toBeNull();
+  });
+
+  it("accepts a loop of exactly the minimum despite float noise", () => {
+    for (const start of [5, 10, 20, 0.7]) {
+      const clip = { start, end: Math.round((start + 0.3) * 10) / 10, enabled: true };
+      expect(loopRange(clip), String(start)).not.toBeNull();
+    }
+  });
 });
 
 describe("hasInvalidRange", () => {

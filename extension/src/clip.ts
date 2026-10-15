@@ -25,8 +25,15 @@ export function sanitizeClip(raw: unknown): Clip {
   };
 }
 
+/** The page checks the video every 100 ms, so a shorter loop would stutter. */
+export const MIN_LOOP_SECONDS = 0.3;
+
 export function hasInvalidRange(clip: Clip): boolean {
-  return clip.start !== null && clip.end !== null && clip.end <= clip.start;
+  return (
+    clip.start !== null &&
+    clip.end !== null &&
+    clip.end - clip.start < MIN_LOOP_SECONDS - 1e-9
+  );
 }
 
 /** The range the page should loop, or null when the loop must stay off. */
