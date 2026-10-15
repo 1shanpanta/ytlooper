@@ -15,13 +15,27 @@ The loop starts as soon as both times are set.
 |---|---|
 | Start and End fields | Type a time: `92`, `1:32` or `1:02:03` |
 | **Set start** and **Set end** | Copy the current video time into the field |
-| `-1s` `-0.1s` `+0.1s` `+1s` | Move a time by a small step |
-| **Loop on** / **Loop off** | Pause or resume without losing the times |
+| `-1` `-.1` `+.1` `+1` | Move a time by 1 second or 0.1 second |
+| **Loop** switch | Pause or resume without losing the times |
 | **Clear** | Remove both times |
+| Range bar | Shows where the loop sits inside the whole video |
 
 The extension saves each video's times. Open the popup again on the same video to see them.
 
+While the loop is on, the video jumps back to the start if you seek outside the range. Turn the **Loop** switch off to look around.
+
 If you reload the tab, the loop stops. Open the popup once to start it again.
+
+### Edge cases
+
+| Case | Result |
+|---|---|
+| An ad plays | The loop waits. **Set start** and **Set end** refuse until the ad ends. |
+| End is past the end of the video | The video restarts at the start time when it finishes. |
+| End is not after start | The end field turns red and the loop stays off. |
+| Not a YouTube tab | The popup asks you to open a video. |
+| Live stream | The loop works. The range bar stays hidden. |
+| Saved data is damaged | The popup ignores it and starts empty. |
 
 ## How it works
 
