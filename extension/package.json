@@ -1,0 +1,22 @@
+{
+  "name": "ytlooper-extension",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite build --watch",
+    "build": "vite build",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "zip": "npm run build && cd dist && zip -qr ../ytlooper-extension.zip .",
+    "store:upload": "node --env-file=.env scripts/webstore.mjs upload",
+    "store:status": "node --env-file=.env scripts/webstore.mjs status",
+    "store:publish": "node --env-file=.env scripts/webstore.mjs publish"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.3.5",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.4",
+    "vitest": "^5.0.4"
+  }
+}
