@@ -18,6 +18,13 @@ flowchart TB
 
 The two apps share no code. Each builds on its own.
 
+## Screenshots
+
+- `screenshots/web-app.png`: the web app while a clip loops.
+- `screenshots/extension-popup.png`: the extension popup with a loop set.
+
+Take new ones from a production build (`npm run build`, then `npx vite preview`). The dev server can fail to load the YouTube API.
+
 ## Web app
 
 - **Entry:** `src/main.tsx`, `src/App.tsx`.

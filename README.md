@@ -4,7 +4,11 @@ Loop any part of a YouTube video. Pick a start and an end, and it repeats.
 
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-ytlooper.vercel.app-22d3ee)](https://ytlooper.vercel.app)
 
-![YT Looper](screenshots/youtube-looper.png)
+![YT Looper web app](screenshots/web-app.png)
+
+<p align="center">
+  <img src="screenshots/extension-popup.png" alt="YT Looper extension popup" width="420">
+</p>
 
 ## Two ways to use it
 
@@ -110,6 +114,7 @@ src/             web app
   utils/         URL and time parsing
 extension/       browser extension, built on its own
 docs/            architecture notes
+screenshots/     images used in the READMEs
 middleware.ts    share link previews
 ```
 

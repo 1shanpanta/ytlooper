@@ -2,6 +2,10 @@
 
 A Chromium extension that loops a section of the YouTube video you are watching.
 
+<p align="center">
+  <img src="../screenshots/extension-popup.png" alt="YT Looper extension popup" width="420">
+</p>
+
 ## Use it
 
 1. Open a YouTube video.
