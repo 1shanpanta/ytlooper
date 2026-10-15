@@ -113,7 +113,8 @@ describe("happy path", () => {
     expect($("status").textContent).toBe("Set a start and an end.");
     expect($("toggle").getAttribute("aria-checked")).toBe("true");
     expect($<HTMLButtonElement>("clear").disabled).toBe(true);
-    expect($("range").hidden).toBe(true);
+    expect($("range").hidden).toBe(false);
+    expect($("range-fill").hidden).toBe(true);
     for (const nudge of document.querySelectorAll<HTMLButtonElement>("[data-nudge]")) {
       expect(nudge.disabled).toBe(true);
     }
@@ -141,7 +142,7 @@ describe("happy path", () => {
     await openPopup();
     await mark("start", 10);
     await mark("end", 20);
-    expect($("range").hidden).toBe(false);
+    expect($("range-fill").hidden).toBe(false);
     expect($("range-fill").style.left).toBe("10%");
     expect($("range-fill").style.width).toBe("10%");
   });
@@ -223,7 +224,7 @@ describe("happy path", () => {
     await openPopup();
     await mark("start", 10);
     await mark("end", 20);
-    expect($("range").hidden).toBe(true);
+    expect($("range-fill").hidden).toBe(true);
     world.video!.currentTime = 21;
     tick();
     expect(world.video!.currentTime).toBe(10);
@@ -287,8 +288,18 @@ describe("bad path", () => {
     await mark("start", 20);
     await mark("end", 10);
     expect($("end").getAttribute("aria-invalid")).toBe("true");
-    expect($("status").textContent).toBe("End must be after start.");
+    expect($("status").textContent).toBe("End must be 0.3s or more after start.");
     expect($("range").classList.contains("invalid")).toBe(true);
+    world.video!.currentTime = 50;
+    tick();
+    expect(world.video!.currentTime).toBe(50);
+  });
+
+  it("refuses a loop of 0.1 seconds, as seen in the recording", async () => {
+    await openPopup();
+    await mark("start", 30);
+    await mark("end", 30.1);
+    expect($("end").getAttribute("aria-invalid")).toBe("true");
     world.video!.currentTime = 50;
     tick();
     expect(world.video!.currentTime).toBe(50);

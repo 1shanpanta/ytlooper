@@ -1,5 +1,5 @@
 import "./popup.css";
-import { EMPTY_CLIP, hasInvalidRange, loopRange, type Clip } from "./clip";
+import { EMPTY_CLIP, MIN_LOOP_SECONDS, hasInvalidRange, loopRange, type Clip } from "./clip";
 import { runInPage, type PageCommand, type PlayerState } from "./page";
 import { loadClip, saveClip } from "./storage";
 import { formatTime, parseTime, roundTenth } from "./time";
@@ -68,8 +68,9 @@ const percent = (seconds: number, total: number) =>
 
 function renderRange() {
   const { start, end } = clip;
+  // The empty track always shows, so the popup height never jumps.
   const known = duration !== null && (start !== null || end !== null);
-  range.hidden = !known;
+  rangeFill.hidden = !known;
   if (!known || duration === null) return;
 
   const from = start ?? end ?? 0;
@@ -102,7 +103,7 @@ function render() {
   clearButton.disabled = clip.start === null && clip.end === null;
   renderRange();
 
-  if (invalid) setStatus("End must be after start.", true);
+  if (invalid) setStatus(`End must be ${MIN_LOOP_SECONDS}s or more after start.`, true);
   else if (clip.start === null || clip.end === null) setStatus("Set a start and an end.");
   else if (!clip.enabled) setStatus("Loop is off.");
   else setStatus(`Looping ${formatTime(clip.start)} to ${formatTime(clip.end)}.`);
