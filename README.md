@@ -1,60 +1,120 @@
-# YouTube Clipper & Looper
+# YT Looper
 
-Loop your favorite YouTube moments endlessly.
+Loop any part of a YouTube video. Pick a start and an end, and it repeats.
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-Available-brightgreen)](https://your-app-url.vercel.app)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-ytlooper.vercel.app-22d3ee)](https://ytlooper.vercel.app)
 
-## Features
+![YT Looper](screenshots/youtube-looper.png)
 
-- **Embed any YouTube video** - Paste any YouTube URL and start clipping
-- **Precise time control** - Set exact start and end times in seconds
-- **Auto-looping** - Your clip plays on repeat automatically
-- **Modern UI** - Clean, responsive design
-- **Instant playback** - No downloads, streams directly from YouTube
+## Two ways to use it
 
-## How to Use
+| | Web app | Browser extension |
+|---|---|---|
+| Where | [ytlooper.vercel.app](https://ytlooper.vercel.app) | The YouTube tab you already have open |
+| How | Paste a URL, set times | Press **Set start** and **Set end** while the video plays |
+| Share a clip | Yes, with a link | No |
+| Folder | `src/` | [`extension/`](extension/README.md) |
 
-1. **Paste a YouTube URL** - Any format works:
-   - `https://www.youtube.com/watch?v=dQw4w9WgXcQ`
-   - `https://youtu.be/dQw4w9WgXcQ`
-   - Just the video ID: `dQw4w9WgXcQ`
+## Web app
 
-2. **Click "Load Video"** - The video will appear in the player
+### Features
 
-3. **Set your clip times**:
-   - **Start time** (in seconds): e.g., `30` for 30 seconds in
-   - **End time** (in seconds): e.g., `45` for 45 seconds in
+- **Any YouTube link.** Full URLs, `youtu.be` links, Shorts, or a bare video ID.
+- **Flexible times.** Type `30`, `50s`, `1m26s` or `2m`.
+- **Auto-loop.** The clip repeats until you pause.
+- **Playback speed.** 0.25x to 2x.
+- **Share links.** One click copies a link that opens the same clip.
+- **Session restore.** The last URL, times and speed come back after a reload.
 
-4. **Click "Play Clip"** - Your selected section will loop endlessly!
+### How to use
 
-## Perfect For
+1. Paste a YouTube link. The video loads by itself.
+2. Enter a start time and an end time.
+3. Press **Play**. The section loops.
 
-- Dance practice - Loop choreography sections
-- Music learning - Practice guitar solos or drum patterns
-- Acting practice - Rehearse specific scenes
-- Workout routines - Repeat exercise sequences
-- Art tutorials - Master specific techniques
-- Gaming highlights - Relive epic moments
+### Share link format
 
-## Tech Stack
+```
+https://ytlooper.vercel.app/?v=<videoId>&start=30&end=56&speed=1&name=<optional>
+```
 
-- **Frontend**: React 18 + Vite
-- **Styling**: Tailwind CSS
-- **Icons**: Lucide React
-- **Player**: YouTube IFrame API
+### How it works
 
-## Browser Support
+```mermaid
+flowchart LR
+  A[Paste URL] --> B[parseVideoId]
+  B --> C[Load YouTube player]
+  C --> D[Press Play]
+  D --> E[Seek to start]
+  E --> F{Timer every 200 ms}
+  F -->|before end| F
+  F -->|reached end| E
+```
 
-- ✅ Chrome (recommended)
-- ✅ Firefox
-- ✅ Safari
-- ✅ Edge
-- ❌ Internet Explorer (not supported)
+State lives in one Zustand store. Only the URL, the times and the speed persist in `localStorage`.
+The loaded video is never persisted: the app loads it again once the YouTube API is ready.
 
-## Screenshots
+## Browser extension
 
-![YouTube Looper](screenshots/youtube-looper.png)
+Loops the video on youtube.com itself. Open the popup, mark a start and an end, done.
+See [`extension/README.md`](extension/README.md) to build and load it.
 
----
+```mermaid
+sequenceDiagram
+  participant You
+  participant Popup
+  participant Tab as YouTube tab
+  You->>Popup: Set start
+  Popup->>Tab: Read current time
+  Tab-->>Popup: 1:32
+  You->>Popup: Set end
+  Popup->>Tab: Read current time
+  Tab-->>Popup: 2:10
+  Popup->>Tab: Start loop 1:32 to 2:10
+  Tab->>Tab: Jump back to 1:32 at 2:10
+```
 
-**Made with ❤️ for the YouTube community**
+## Perfect for
+
+- Dance practice: loop one piece of choreography.
+- Music practice: repeat a guitar solo or a drum fill.
+- Language study: replay one sentence until it sticks.
+- Workouts: repeat one exercise demo.
+- Tutorials: replay the hard step.
+
+## Tech stack
+
+| Part | Tools |
+|---|---|
+| Web app | React 18, Vite, TypeScript, Tailwind CSS, Zustand, Lucide |
+| Player | YouTube IFrame API |
+| Share previews | Vercel middleware (`middleware.ts`) |
+| Extension | Manifest V3, TypeScript, Vite, Vitest |
+
+## Develop
+
+```bash
+npm install
+npm run dev      # web app on localhost
+npm run build    # production build
+npm run lint
+```
+
+## Project structure
+
+```
+src/             web app
+  components/    UI pieces
+  hooks/         YouTube API and share link loading
+  store/         Zustand stores
+  utils/         URL and time parsing
+extension/       browser extension, built on its own
+docs/            architecture notes
+middleware.ts    share link previews
+```
+
+More detail: [`docs/architecture.md`](docs/architecture.md).
+
+## Browser support
+
+Chrome, Edge, Firefox and Safari run the web app. The extension needs a Chromium browser.
