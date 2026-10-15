@@ -101,12 +101,16 @@ export const usePlayerStore = create<PlayerStore>()(
 
       // Complex actions
       loadVideo: (videoId) => {
-        const { player, setStatus, setLoopTimer } = get();
+        const { player, currentVideo, setStatus, setLoopTimer } = get();
 
         if (!videoId) {
           setStatus('Invalid video ID', 'error');
           return;
         }
+
+        // The player component only rebuilds when the id changes. Reloading the
+        // same id would destroy the live player and leave an empty box.
+        if (currentVideo?.id === videoId) return;
 
         // Stop any current loop
         setLoopTimer(null);
@@ -173,15 +177,25 @@ export const usePlayerStore = create<PlayerStore>()(
       {
         name: 'youtube-looper-session',
         partialize: (state) => ({
-          // Persist current session data
           url: state.url,
           startTime: state.startTime,
           endTime: state.endTime,
           playbackRate: state.playbackRate,
-          currentVideo: state.currentVideo,
-          currentTime: state.currentTime,
-          duration: state.duration,
         }),
+        // currentVideo must not come back from storage: it would mount the
+        // player before the YouTube API is ready. The restore path in
+        // useUrlClipLoader loads the video once the API is ready. Sessions
+        // saved by older builds still hold the key, so pick fields explicitly.
+        merge: (persisted, current) => {
+          const saved = (persisted ?? {}) as Partial<PlayerStore>;
+          return {
+            ...current,
+            url: saved.url ?? current.url,
+            startTime: saved.startTime ?? current.startTime,
+            endTime: saved.endTime ?? current.endTime,
+            playbackRate: saved.playbackRate ?? current.playbackRate,
+          };
+        },
       }
     ),
     {

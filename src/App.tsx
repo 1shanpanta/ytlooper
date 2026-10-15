@@ -95,7 +95,17 @@ function App() {
 
   const handlePlayClip = () => {
     if (!player) {
-      setStatus('Load a video first, then set times.', 'warning');
+      if (currentVideo) {
+        setStatus('Video is still loading. Try again in a moment.', 'warning');
+        return;
+      }
+      const videoId = parseVideoId(url);
+      if (videoId) {
+        loadVideo(videoId);
+        setStatus('Loading video. Press Play again when it appears.', 'info');
+      } else {
+        setStatus('Paste a YouTube URL first.', 'warning');
+      }
       return;
     }
 
