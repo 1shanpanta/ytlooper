@@ -6,7 +6,10 @@ export type PageCommand =
 
 export interface PlayerState {
   videoId: string | null;
+  /** Null when there is no video, or while an ad plays. */
   time: number | null;
+  /** Null for live streams, ads, or a video that has not loaded yet. */
+  duration: number | null;
 }
 
 /**
@@ -17,6 +20,7 @@ export interface PlayerState {
 export function runInPage(command: PageCommand): PlayerState {
   const mainVideo = () =>
     document.querySelector<HTMLVideoElement>("video.html5-main-video");
+  const adPlaying = () => document.querySelector(".ad-showing") !== null;
   const currentVideoId = () => {
     const watchId = new URLSearchParams(location.search).get("v");
     if (watchId) return watchId;
@@ -35,14 +39,23 @@ export function runInPage(command: PageCommand): PlayerState {
       // id each tick. Seeking during an ad would break the ad, so it skips them.
       page.__ytlooper = window.setInterval(() => {
         const video = mainVideo();
-        if (!video || currentVideoId() !== videoId) return;
-        if (document.querySelector(".ad-showing")) return;
-        if (video.currentTime >= range.end || video.currentTime < range.start) {
+        if (!video || currentVideoId() !== videoId || adPlaying()) return;
+        if (video.ended) {
+          // An end past the last frame never fires the check below.
+          video.currentTime = range.start;
+          void video.play();
+        } else if (video.currentTime >= range.end || video.currentTime < range.start) {
           video.currentTime = range.start;
         }
       }, 100);
     }
   }
 
-  return { videoId: currentVideoId(), time: mainVideo()?.currentTime ?? null };
+  const video = mainVideo();
+  const readable = video !== null && !adPlaying();
+  return {
+    videoId: currentVideoId(),
+    time: readable ? video.currentTime : null,
+    duration: readable && Number.isFinite(video.duration) && video.duration > 0 ? video.duration : null,
+  };
 }

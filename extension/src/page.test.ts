@@ -3,6 +3,9 @@ import { runInPage } from "./page";
 
 interface FakeVideo {
   currentTime: number;
+  duration: number;
+  ended: boolean;
+  play: () => Promise<void>;
 }
 
 let video: FakeVideo | null;
@@ -14,7 +17,7 @@ function setUrl(search: string, pathname = "/watch") {
 
 beforeEach(() => {
   vi.useFakeTimers();
-  video = { currentTime: 0 };
+  video = { currentTime: 0, duration: 100, ended: false, play: vi.fn(async () => {}) };
   adShowing = false;
   vi.stubGlobal("window", globalThis);
   vi.stubGlobal("document", {
@@ -37,9 +40,9 @@ const startLoop = (start = 10, end = 20) =>
   runInPage({ type: "loop", videoId: "abc", range: { start, end } });
 
 describe("read", () => {
-  it("reports the watch id and the current time", () => {
+  it("reports the watch id, the current time and the duration", () => {
     video!.currentTime = 42.5;
-    expect(runInPage({ type: "read" })).toEqual({ videoId: "abc", time: 42.5 });
+    expect(runInPage({ type: "read" })).toEqual({ videoId: "abc", time: 42.5, duration: 100 });
   });
 
   it("reads the id from a shorts path", () => {
@@ -50,7 +53,23 @@ describe("read", () => {
   it("reports nulls when there is no video or id", () => {
     video = null;
     setUrl("", "/");
-    expect(runInPage({ type: "read" })).toEqual({ videoId: null, time: null });
+    expect(runInPage({ type: "read" })).toEqual({ videoId: null, time: null, duration: null });
+  });
+
+  it("hides the time and duration while an ad plays", () => {
+    adShowing = true;
+    video!.currentTime = 7;
+    expect(runInPage({ type: "read" })).toEqual({ videoId: "abc", time: null, duration: null });
+  });
+
+  it("reports no duration for a live stream", () => {
+    video!.duration = Infinity;
+    expect(runInPage({ type: "read" }).duration).toBeNull();
+  });
+
+  it("reports no duration before the video has loaded", () => {
+    video!.duration = NaN;
+    expect(runInPage({ type: "read" }).duration).toBeNull();
   });
 });
 
@@ -84,12 +103,37 @@ describe("loop", () => {
     expect(video!.currentTime).toBe(25);
   });
 
+  it("resumes when the page comes back to the looped video", () => {
+    startLoop();
+    setUrl("?v=other");
+    vi.advanceTimersByTime(300);
+    setUrl("?v=abc");
+    video!.currentTime = 25;
+    vi.advanceTimersByTime(100);
+    expect(video!.currentTime).toBe(10);
+  });
+
   it("does not seek while an ad plays", () => {
     startLoop();
     adShowing = true;
     video!.currentTime = 25;
     vi.advanceTimersByTime(100);
     expect(video!.currentTime).toBe(25);
+  });
+
+  it("restarts a video that ended before an end time past its length", () => {
+    startLoop(10, 500);
+    video!.currentTime = 100;
+    video!.ended = true;
+    vi.advanceTimersByTime(100);
+    expect(video!.currentTime).toBe(10);
+    expect(video!.play).toHaveBeenCalled();
+  });
+
+  it("keeps ticking when the video element is missing", () => {
+    startLoop();
+    video = null;
+    expect(() => vi.advanceTimersByTime(500)).not.toThrow();
   });
 
   it("stops looping when the range is cleared", () => {
